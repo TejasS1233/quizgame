@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Dev Quiz</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      href="https://cdn-icons-png.flaticon.com/512/584/584603.png"
+    />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="logo">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/4781/4781517.png"
+          alt="icon"
+          class="logo-icon"
+        />
+        Web Dev Quiz
+      </div>
+      <div class="toggle-wrapper">
+        <span id="mode-icon">🌞</span>
+        <label class="switch">
+          <input type="checkbox" id="modeToggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </nav>
+
+    <!-- START SCREEN -->
+    <div class="card" id="startScreen">
+      <h2>Enter Your Name</h2>
+      <input type="text" id="playerName" placeholder="Your Name" />
+      <button id="startBtn">Start Quiz</button>
+    </div>
+
+    <!-- QUIZ AREA -->
+    <main class="quiz-container" id="quizContainer" style="display: none">
+      <div class="card question-card">
+        <h2 id="question" class="question-box"></h2>
+        <div id="answers" class="answers-box"></div>
+        <button id="next" class="next-btn">Next</button>
+        <p id="score" class="score-display"></p>
+      </div>
+
+      <div class="card leaderboard-card" id="leaderboard">
+        <h2>🏆 Leaderboard</h2>
+        <ul id="leaderboard-list"></ul>
+      </div>
+    </main>
+
+    <canvas id="confetti-canvas"></canvas>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  </body>
+</html>

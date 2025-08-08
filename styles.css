@@ -1,0 +1,409 @@
+/*
+  ========================================
+  GODLY QUIZ AESTHETIC v5.6 (LOGIN VIBE)
+  ========================================
+  DESIGNED FOR YOUR EXACT HTML STRUCTURE.
+  - Styles the Navbar, Start Screen, Quiz, and Leaderboard.
+  - Implements a full Light/Dark theme system.
+  - Uses a unified, modern sans-serif font hierarchy (Inter).
+  - Correctly centers content below the fixed navbar.
+  - Adds a subtle moving neon glow to the question card.
+  - Creates a "login-like" feel for the start screen.
+  - Made leaderboard glow even more subtle.
+*/
+
+/* === FONT IMPORTS === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* === ROOT COLOR & STYLE VARIABLES === */
+:root {
+  /* --- Typography --- */
+  --font-title: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* --- Light Theme --- */
+  --bg-light: #f4f7f6;
+  --navbar-bg-light: rgba(255, 255, 255, 0.6);
+  --card-bg-light: rgba(255, 255, 255, 0.5);
+  --text-light: #1d2c3a;
+  --accent-grad-light: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+  --border-light: rgba(30, 30, 30, 0.15);
+  --shadow-light: rgba(44, 62, 80, 0.1);
+  --btn-answer-bg-light: rgba(255, 255, 255, 0.3);
+  --btn-answer-hover-light: rgba(255, 255, 255, 0.7);
+
+  /* --- Dark Theme --- */
+  --bg-dark: #121212;
+  --navbar-bg-dark: rgba(28, 28, 32, 0.75);
+  --card-bg-dark: rgba(28, 28, 32, 0.65);
+  --text-dark: #e0e0e0;
+  --accent-grad-dark: linear-gradient(to right, #00c6ff, #0072ff);
+  --border-dark: rgba(255, 255, 255, 0.15);
+  --shadow-dark: rgba(0, 0, 0, 0.3);
+  --btn-answer-bg-dark: rgba(255, 255, 255, 0.05);
+  --btn-answer-hover-dark: rgba(255, 255, 255, 0.1);
+
+  /* --- Universal Feedback Colors --- */
+  --success-glow: #27ae60;
+  --error-glow: #c0392b;
+
+  /* --- Leaderboard Glow Colors --- */
+  --gold-glow: #ffd700;
+  --silver-glow: #c0c0c0;
+  --bronze-glow: #cd7f32;
+
+
+  /* --- Style Properties --- */
+  --navbar-height: 70px;
+  --card-border-radius: 24px;
+  --button-border-radius: 12px;
+  --transition-speed: 0.4s;
+}
+
+/* === BASE & BODY STYLES === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-light);
+  color: var(--text-light);
+  transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+  padding-top: var(--navbar-height); /* Prevent content from hiding under fixed navbar */
+}
+
+body.dark {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+/* === NAVBAR STYLING === */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--navbar-height);
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+
+  /* Glassmorphism Effect */
+  background: var(--navbar-bg-light);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-light);
+  transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+body.dark .navbar {
+  background: var(--navbar-bg-dark);
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+#mode-icon { font-size: 1.5rem; }
+
+/* Dark Mode Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px; width: 20px;
+  left: 4px; bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider { background: var(--accent-grad-dark); }
+input:checked + .slider:before { transform: translateX(22px); }
+
+/* === MAIN CONTENT & CARD STYLING === */
+/* This container centers your quiz content on the page */
+#startScreen, .quiz-container {
+  max-width: 700px;
+  margin: 2rem auto; /* Centers the block and adds space from navbar */
+  padding: 0 1rem;
+}
+
+.card {
+  width: 100%;
+  padding: 2.5rem;
+  margin-bottom: 2rem; /* Space between cards */
+  background: var(--card-bg-light);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-radius: var(--card-border-radius);
+  border: 1px solid var(--border-light);
+  box-shadow: 0 8px 32px 0 var(--shadow-light);
+  transition: all var(--transition-speed) ease;
+  text-align: center;
+  position: relative; /* Needed for pseudo-elements */
+  overflow: hidden;   /* Needed for pseudo-elements */
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+}
+body.dark .card {
+  background: var(--card-bg-dark);
+  border: 1px solid var(--border-dark);
+  box-shadow: 0 8px 32px 0 var(--shadow-dark);
+}
+
+/* === START SCREEN LOGIN VIBE === */
+#startScreen.card {
+  max-width: 500px; /* Narrower for login feel */
+  min-height: 450px;
+  justify-content: center;
+}
+#startScreen.card h2 {
+  margin-bottom: 2.5rem;
+}
+
+
+/* Titles inside cards (like "Enter Your Name") */
+.card h2 {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin-bottom: 2rem;
+}
+
+/* === FORMS & INPUTS === */
+#playerName {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    width: 100%;
+    max-width: 400px;
+    padding: 14px;
+    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    color: var(--text-light);
+    text-align: center;
+    transition: all var(--transition-speed) ease;
+    margin-left: auto;
+    margin-right: auto;
+}
+body.dark #playerName {
+  background: rgba(0,0,0,0.2);
+  color: var(--text-dark);
+  border-color: var(--border-dark);
+}
+#playerName::placeholder { color: var(--text-light); opacity: 0.6; }
+body.dark #playerName::placeholder { color: var(--text-dark); }
+#playerName:focus {
+    outline: none;
+    border-color: #6a11cb;
+    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.3);
+}
+body.dark #playerName:focus {
+    border-color: #00c6ff;
+    box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.3);
+}
+
+
+/* === BUTTONS === */
+/* Base styles for all buttons */
+#startBtn, #next, .answers-box button {
+  font-family: var(--font-body);
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--button-border-radius);
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary buttons (Start/Next) */
+#startBtn, #next {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent-grad-light);
+  background-size: 200% auto;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+body.dark #startBtn, body.dark #next { background: var(--accent-grad-dark); }
+
+#startBtn:hover:not([disabled]), #next:hover:not([disabled]) {
+  background-position: right center;
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+}
+
+/* Answer buttons */
+.answers-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.answers-box button {
+  width: 100%;
+  text-align: left;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--text-light);
+  background: var(--btn-answer-bg-light);
+  border: 1px solid var(--border-light);
+}
+body.dark .answers-box button {
+  color: var(--text-dark);
+  background: var(--btn-answer-bg-dark);
+  border-color: var(--border-dark);
+}
+.answers-box button:hover:not([disabled]) {
+  background: var(--btn-answer-hover-light);
+  border-color: #6a11cb;
+  transform: scale(1.02);
+}
+body.dark .answers-box button:hover:not([disabled]) {
+  background: var(--btn-answer-hover-dark);
+  border-color: #00c6ff;
+}
+
+/* Feedback states */
+.answers-box button.correct {
+  background: var(--success-glow) !important;
+  border-color: var(--success-glow) !important;
+  color: #fff !important;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(39, 174, 96, 0.5);
+}
+.answers-box button.incorrect {
+  background: var(--error-glow) !important;
+  border-color: var(--error-glow) !important;
+  color: #fff !important;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(192, 57, 43, 0.5);
+}
+
+/* === LEADERBOARD & MISC === */
+#leaderboard-list {
+  list-style: none;
+  text-align: left;
+  font-size: 1.1rem;
+}
+#leaderboard-list li {
+  position: relative;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border-light);
+  overflow: hidden; /* Important for the pseudo-element */
+  border-radius: 8px; /* Rounded corners for the glow to follow */
+  margin-bottom: 8px; /* Space between items */
+}
+body.dark #leaderboard-list li {
+  border-bottom: 1px solid var(--border-dark);
+}
+#leaderboard-list li:last-child { border-bottom: none; }
+
+/* --- NEON GLOW ANIMATION --- */
+@keyframes neon-glow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* --- QUESTION CARD GLOW --- */
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150%;
+  height: 100%;
+  animation: neon-glow 6s linear infinite;
+  background: linear-gradient(to right, transparent, rgba(106, 17, 203, 0.4), transparent);
+  opacity: 0.2; /* Very subtle glow */
+}
+body.dark .question-card::before {
+    background: linear-gradient(to right, transparent, rgba(0, 198, 255, 0.4), transparent);
+}
+
+
+/* --- LEADERBOARD GLOW (Even Subtler) --- */
+#leaderboard-list li:nth-child(-n+3)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: neon-glow 5s linear infinite;
+  opacity: 0.15; /* Further reduced opacity */
+}
+
+/* Gold for 1st place */
+#leaderboard-list li:nth-child(1)::before {
+  background: linear-gradient(to right, transparent, var(--gold-glow), transparent);
+}
+#leaderboard-list li:nth-child(1) {
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.15); /* Further reduced shadow */
+}
+
+/* Silver for 2nd place */
+#leaderboard-list li:nth-child(2)::before {
+  background: linear-gradient(to right, transparent, var(--silver-glow), transparent);
+  animation-delay: -1.6s; /* Offset animation */
+}
+#leaderboard-list li:nth-child(2) {
+  box-shadow: 0 0 8px rgba(192, 192, 192, 0.15); /* Further reduced shadow */
+}
+
+/* Bronze for 3rd place */
+#leaderboard-list li:nth-child(3)::before {
+  background: linear-gradient(to right, transparent, var(--bronze-glow), transparent);
+  animation-delay: -3.2s; /* Offset animation */
+}
+#leaderboard-list li:nth-child(3) {
+  box-shadow: 0 0 8px rgba(205, 127, 50, 0.15); /* Further reduced shadow */
+}
+
+
+#confetti-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Hide elements meant to be shown by JS */
+#next { display: none; }
